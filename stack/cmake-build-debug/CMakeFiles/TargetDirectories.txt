@@ -1,0 +1,3 @@
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/stack/cmake-build-debug/CMakeFiles/stack.dir
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/stack/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/stack/cmake-build-debug/CMakeFiles/rebuild_cache.dir
