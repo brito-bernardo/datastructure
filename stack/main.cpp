@@ -102,6 +102,19 @@ class Stack{
                 std::cout << arr[i] << std::endl;
             }
         }
+        void reverse()
+        {
+            Stack tempStack;
+            while (!isEmpty())
+            {
+               tempStack.push(pop());
+            }
+            while (!tempStack.isEmpty())
+            {
+                push(tempStack.pop());
+            }
+        }
+
 
 
 
@@ -124,7 +137,8 @@ int main()
         std::cout << "6. count()" << std::endl;
         std::cout << "7. change()" << std::endl;
         std::cout << "8. display()" << std::endl;
-        std::cout << "9. Clear Screen" << std::endl << std::endl;
+        std::cout << "9. reverse()" << std::endl;
+        std::cout << "10. Clear Screen" << std::endl << std::endl;
 
         std::cin >> option;
         switch (option)
@@ -168,17 +182,29 @@ int main()
                 std::cout << "The number of items in the stack are " << s1.count() << std::endl;
                 break;
             case 7:
-                std::cout << "Enter the value you want to change " << std::endl;
+                std::cout << "Enter the value you want to change. " << std::endl;
                 std::cin >> value;
-                std::cout << "Enter the position you want to put in" << std::endl;
+                std::cout << "Enter the position you want to put in." << std::endl;
                 std::cin >> position;
                 s1.change(position,value);
                 break;
             case 8:
-                std::cout << "Display function called " << std::endl;
+                std::cout << "Display function called. " << std::endl;
                 s1.display();
                 break;
             case 9:
+                if (s1.isEmpty())
+                {
+                    std::cout << "Stack is empty, it can not be reversed. " << std::endl;
+                }
+                else
+                {
+                    s1.reverse();
+                    std::cout << "Stack has been reversed." << std::endl;
+                }
+
+                break;
+            case 10:
                 system("cls");
                 break;
             default:
