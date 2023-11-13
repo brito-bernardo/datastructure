@@ -1,0 +1,3 @@
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/LinearSearch/cmake-build-debug/CMakeFiles/LinearSearch.dir
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/LinearSearch/cmake-build-debug/CMakeFiles/edit_cache.dir
+/Users/bernardobrito/Desktop/projetos-backend/datastructure/LinearSearch/cmake-build-debug/CMakeFiles/rebuild_cache.dir
