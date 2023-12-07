@@ -32,5 +32,4 @@ void Doctor::addPatientToAttend(const Patient& p1) {
 
 //TODO
 void Doctor::moveToFront(int idP) {
-
 }

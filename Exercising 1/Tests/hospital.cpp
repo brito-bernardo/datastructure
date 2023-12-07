@@ -42,36 +42,43 @@ void Hospital::setConsultations(const list<stack<Consultation>>& consults) {
 // --------------------------------------------------------------------
 
 //TODO
-void Hospital::sortDoctors() {
-    std::sort(doctors.begin(), doctors.end(),[](const Doctor& a, const Doctor& b) {
-        if (a.getPatientsToAttend().size() == b.getPatientsToAttend().size()) {
-            return a.getID() < b.getID(); // Ordem crescente de ID para igualdade no tamanho da fila
-        }
-        return a.getPatientsToAttend().size() > b.getPatientsToAttend().size(); // Ordem decrescente pelo tamanho da fila
-    });
+void Hospital::sortDoctors()
+{
+   std::sort(doctors.begin(), doctors.end(), [](const Doctor& a, const Doctor& b){
+       if (a.getPatientsToAttend().size() == b.getPatientsToAttend().size())
+       {
+           return a.getID()< b.getID();
+       }
+       return a.getPatientsToAttend().size() > b.getPatientsToAttend().size();
+   });
 }
 
 
 // TODO
-float Hospital::averageNPatients(string sp) const {
+float Hospital::averageNPatients(string sp) const
+{
     int totalPatients = 0;
     int countDoctors = 0;
+    float avg = 0.0;
 
-    for (const Doctor& doc : doctors) {
-        if (doc.getSpecialty() == sp) {
+    for(const Doctor& doc: doctors)
+    {
+        if (doc.getSpecialty() == sp)
+        {
             totalPatients += doc.getPatientsToAttend().size();
             countDoctors++;
         }
     }
+    if (countDoctors == 0) return 0.0;
+    avg = totalPatients/countDoctors;
+    return avg;
 
-    if (countDoctors == 0) return 0.0f; // Evita divisão por zero
 
-    return totalPatients / (float)countDoctors; // Conversão implícita para float
 }
 
-
 // TODO
-int Hospital::removePatients(int minC) {
+int Hospital::removePatients(int minC)
+{
     int removedPatients = 0;
 
     for (auto it = patients.begin(); it != patients.end(); ) {
@@ -82,7 +89,6 @@ int Hospital::removePatients(int minC) {
             ++it;
         }
     }
-
     return removedPatients;
 }
 
