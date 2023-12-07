@@ -18,19 +18,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2d6816b6-a5f9-454a-90c6-1b1b08b66035" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/linkedlist/linkedlist2.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/Tests/doctor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/Tests/doctor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/Tests/hospital.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/Tests/hospital.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/.ninja_deps" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/.ninja_deps" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/.ninja_log" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/.ninja_log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/CMakeFiles/aed2223_ci1.dir/Tests/doctor.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/CMakeFiles/aed2223_ci1.dir/Tests/doctor.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/CMakeFiles/aed2223_ci1.dir/Tests/hospital.cpp.o" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/CMakeFiles/aed2223_ci1.dir/Tests/hospital.cpp.o" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/aed2223_ci1" beforeDir="false" afterPath="$PROJECT_DIR$/Exercising 1/cmake-build-debug/aed2223_ci1" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/SinglyLinkedList/cmake-build-debug/Testing/Temporary/LastTest.log" beforeDir="false" afterPath="$PROJECT_DIR$/SinglyLinkedList/cmake-build-debug/Testing/Temporary/LastTest.log" afterDir="false" />
-    </list>
+    <list default="true" id="2d6816b6-a5f9-454a-90c6-1b1b08b66035" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,6 +72,7 @@
       <workItem from="1699528624177" duration="236000" />
       <workItem from="1701974208035" duration="699000" />
       <workItem from="1701974930714" duration="296000" />
+      <workItem from="1701975733970" duration="13000" />
     </task>
     <servers />
   </component>
