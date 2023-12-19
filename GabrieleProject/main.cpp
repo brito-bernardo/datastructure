@@ -80,24 +80,39 @@ public:
         }
 
         string line;
+        bool boardSection = false;
         while (getline(file, line)) {
             if (line.find("BOARD SIZE :") != string::npos) {
-                // Parse board size and initialize board dimensions
-                istringstream iss(line);
-                string temp;
-                int rows, cols;
-                getline(iss, temp, ':'); // Skip "BOARD SIZE :"
-                iss >> rows >> temp >> cols; // temp is 'x'
-                initializeBoard(rows, cols);
+                // Parse board size and initialize dimensions
+                istringstream iss(line.substr(12)); // Extract size part
+                iss >> numLins_ >> line >> numCols_; // line is used to skip 'x'
+                b_ = vector<vector<Cell>>(numLins_, vector<Cell>(numCols_, {'.', '.', 0}));
             } else if (line.find("BOARD :") != string::npos) {
-                // Parse board layout
-                for (int i = 0; i < numLins_ && getline(file, line); ++i) {
-                    parseBoardRow(line, i);
+                boardSection = true; // Indicates the start of the board layout section
+            } else if (boardSection) {
+                if (line.find("WORDS :") != string::npos) {
+                    break; // End of the board layout section, start of the words section
+                }
+                if (!line.empty() && isalpha(line[0])) {
+                    parseBoardRow(line, line[0] - 'A'); // Parse each row of the board
                 }
             }
-            // Additional parsing for the words section if needed
+        }
+
+        // Parse and place words
+        while (getline(file, line)) {
+            if (!line.empty()) {
+                istringstream iss(line);
+                string position, word;
+                char orientation;
+                iss >> position >> orientation >> word;
+                placeWord(position, orientation, word);
+            }
         }
     }
+
+
+
 
     // Method to get all letters in board (useful for building the bag)
     string getLetters() const;
@@ -121,6 +136,7 @@ private:
     int numWords_;
     void initializeBoard(int rows, int cols);
     void parseBoardRow(const string& row, int rowIndex);// Total number of points for ending the game
+    void placeWord(const string& position, char orientation, const string& word);
     // Other attributes ...?
 };
 
@@ -156,15 +172,40 @@ void Board::initializeBoard(int rows, int cols) {
 }
 
 void Board::parseBoardRow(const string& row, int rowIndex) {
-    istringstream iss(row);
-    string temp;
-    getline(iss, temp, ':'); // Skip "BOARD :"
-    for (int i = 0; i < numCols_ && getline(iss, temp, ' '); ++i) {
-        Cell& cell = b_[rowIndex][i];
-        cell.symbol_ = temp[0];
-        cell.dir_ = temp[1];
+    // Assuming the row format is like "A . . . . C . . E . . ."
+    istringstream iss(row.substr(2)); // Skip the row label (e.g., 'A')
+    char symbol;
+    int colIndex = 0;
+    while (iss >> symbol && colIndex < numCols_) {
+        b_[rowIndex][colIndex].symbol_ = symbol;
+        colIndex++;
     }
 }
+
+
+void Board::placeWord(const string& position, char orientation, const string& word) {
+    int rowIndex = position[0] - 'A'; // Convert row letter to index
+    int colIndex = tolower(position[1]) - 'a'; // Convert column letter to index
+
+    if (orientation == 'H') {
+        for (size_t i = 0; i < word.length() && colIndex + i < numCols_; ++i) {
+            Cell& cell = b_[rowIndex][colIndex + i];
+            // Only place the letter if the cell is empty or matches the word letter
+            if (cell.symbol_ == '.' || cell.symbol_ == word[i]) {
+                cell.symbol_ = word[i];
+            }
+        }
+    } else if (orientation == 'V') {
+        for (size_t i = 0; i < word.length() && rowIndex + i < numLins_; ++i) {
+            Cell& cell = b_[rowIndex + i][colIndex];
+            // Only place the letter if the cell is empty or matches the word letter
+            if (cell.symbol_ == '.' || cell.symbol_ == word[i]) {
+                cell.symbol_ = word[i];
+            }
+        }
+    }
+}
+
 
 
 
@@ -230,13 +271,23 @@ bool Board::playAt(int playerId, char lin, char col, char letter) {
 }
 
 void Board::show() const {
-    for (const auto& row : b_) {
-        for (const auto& cell : row) {
-            cout << cell.symbol_ << ' ';
+    // Display column headers
+    cout << "  ";  // Extra space for row labels alignment
+    for (int col = 0; col < numCols_; ++col) {
+        cout << char('a' + col) << ' ';
+    }
+    cout << endl;
+
+    // Display the board with row labels
+    for (int row = 0; row < numLins_; ++row) {
+        cout << char('A' + row) << ' ';  // Row label
+        for (int col = 0; col < numCols_; ++col) {
+            cout << b_[row][col].symbol_ << ' ';
         }
         cout << endl;
     }
 }
+
 
 //================================================================================
 // Class methods - Bag
@@ -398,18 +449,17 @@ void distributeLettersToPlayers(std::vector<Player>& players, int numPlayerLette
 //================================================================================
 //================================================================================
 //================================================================================
-int main()
-{
+int main() {
     int numPlayers, numPlayerLetters;
 
-    // First, read the number of players
+    // Read the number of players
     cout << "Number of players ? ";
     cin >> numPlayers;
 
-    // Initialize the vector of players now that we have the number
+    // Initialize the vector of players
     vector<Player> players(numPlayers);
 
-    // Now read the players' information
+    // Read the players' information
     readPlayersInfo(players);
 
     // Create the Board and Bag objects
@@ -424,6 +474,7 @@ int main()
     // Distribute letters to players
     distributeLettersToPlayers(players, numPlayerLetters, bag);
 
+    // Show initial board state
     board.show();
 
     // Game loop
@@ -432,29 +483,38 @@ int main()
         for (int i = 0; i < numPlayers && !gameOver; ++i) {
             cout << "Player " << players[i].getName() << "'s turn. Enter your move: " << endl;
 
-            // Example player move input:
-            // Ask for row, column, and letter
+            // Player move input: row (letter), column (letter), and letter to play
             char row, col, letter;
-            cout << "Enter row (A-K), column (1-11), and letter: ";
-            cin >> row >> col >> letter;
+            cout << "Enter row (A-K): ";
+            cin >> row;
 
-            // Implement move validation and update logic here
-            // For now, let's just make a simple move
-            if (!board.playAt(i + 1, row, col, letter)) {
+            // Player move input: column (letter)
+            cout << "Enter column (a-k): ";
+            cin >> col;
+
+            // Player move input: letter to play
+            cout << "Enter letter to play: ";
+            cin >> letter;
+
+            // Convert column from letter to index ('a' -> 0, 'b' -> 1, ...)
+            int colIndex = tolower(col) - 'a';
+
+            // Make a move
+            if (!board.playAt(i + 1, row, colIndex, letter)) {
                 cout << "Invalid move!" << endl;
                 continue; // Skip to the next player if the move is invalid
             }
 
             board.show(); // Show the board after each move
 
-            // Simple game over condition (e.g., after one round of turns)
-            if (i == numPlayers - 1) {
-                gameOver = true;
-            }
+            // Implement your game-over condition here
+            // gameOver = checkIfGameOver();
         }
     }
 
     cout << "Game over! Final board state:" << endl;
     board.show();
+
+
     return 0;
 }
