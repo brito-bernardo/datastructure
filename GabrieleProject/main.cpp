@@ -429,21 +429,32 @@ int main()
     // Game loop
     bool gameOver = false;
     while (!gameOver) {
-        for (int i = 0; i < numPlayers; ++i) {
-            cout << "Player " << players[i].getName() << "'s turn:" << endl;
-            // Implement player move logic here
-            // For example, ask player where to play a letter and update the board
+        for (int i = 0; i < numPlayers && !gameOver; ++i) {
+            cout << "Player " << players[i].getName() << "'s turn. Enter your move: " << endl;
+
+            // Example player move input:
+            // Ask for row, column, and letter
+            char row, col, letter;
+            cout << "Enter row (A-K), column (1-11), and letter: ";
+            cin >> row >> col >> letter;
+
+            // Implement move validation and update logic here
+            // For now, let's just make a simple move
+            if (!board.playAt(i + 1, row, col, letter)) {
+                cout << "Invalid move!" << endl;
+                continue; // Skip to the next player if the move is invalid
+            }
 
             board.show(); // Show the board after each move
 
-            // Check for game over condition
-            // gameOver = checkIfGameOver();
+            // Simple game over condition (e.g., after one round of turns)
+            if (i == numPlayers - 1) {
+                gameOver = true;
+            }
         }
     }
 
-    // Display final results
     cout << "Game over! Final board state:" << endl;
     board.show();
-
     return 0;
 }
