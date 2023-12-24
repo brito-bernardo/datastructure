@@ -1,3 +1,12 @@
+//================================================================================
+// WORD GAMES - BOARD MAKER PART 2
+//
+// GROUP 14
+// MEMBERS:
+//  Gabriele Rocha de Carvalho (up202302557)
+//  Hannia Valentina Espinoza Reyes (up202302569)
+//================================================================================
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -7,14 +16,32 @@
 #include <set>
 #include <algorithm>
 #include <random>
-#include <map>
+#include <cctype>
+//--------------------------------------------------------------------------------
+//================================================================================
+// COLOR CODES
+//================================================================================
+// TEXT COLOR
+#define NO_COLOR      "\033[0m"
+#define BLACK         "\033[0;30m"
+#define RED           "\033[0;31m"
+#define WHITE         "\033[1;37m"
 
+// BACKGROUND COLOR
+#define BLACK_B       "\033[0;40m"
+#define WHITE_B       "\033[1;47m"
+//--------------------------------------------------------------------------------
 using namespace std;
+
+//================================================================================
+// PARTIAL DEFINITION OF CLASSES
+//================================================================================
 
 struct Cell {
     char symbol_;   // A letter or a dot (= empty cell)
     char dir_;      // Direction of the word(s) that occupy the cell: H, V, + (= both H and V)
     int playerId_;  // Player number: 1,2,3,4; 0 = no player yet
+    bool isModified_;
 };
 
 class Hand {
@@ -48,6 +75,10 @@ public:
         return false;
     }
 
+    void clear() {
+        letters_.clear();
+    }
+
     void show() const {
         for (char letter : letters_) {
             cout << letter << ' ';
@@ -67,6 +98,9 @@ public:
     string getName() const { return name_; }
     int getPoints() const { return points_; }
     Hand getHand() const { return hand_; }
+    Hand& getHandReference() {
+        return hand_;
+    }
 
     void setName(const string& name) { name_ = name; }
     void addPoints(int points) { points_ += points; }
@@ -102,10 +136,12 @@ public:
                 // Parse board size and initialize dimensions
                 istringstream iss(line.substr(12)); // Extract size part
                 iss >> numLins_ >> line >> numCols_; // line is used to skip 'x'
-                b_ = vector<vector<Cell>>(numLins_, vector<Cell>(numCols_, {'.', '.', 0}));
-            } else if (line.find("BOARD :") != string::npos) {
+                b_ = vector<vector<Cell>>(numLins_, vector<Cell>(numCols_, { '.', '.', 0 }));
+            }
+            else if (line.find("BOARD :") != string::npos) {
                 boardSection = true; // Indicates the start of the board layout section
-            } else if (boardSection) {
+            }
+            else if (boardSection) {
                 if (line.find("WORDS :") != string::npos) {
                     break; // End of the board layout section, start of the words section
                 }
@@ -163,7 +199,7 @@ public:
 
         cell.symbol_ = letter; // Place the letter
         cell.playerId_ = playerId; // Mark the cell with the player's ID
-        lastPlay_ = {rowIndex, colIndex}; // Store the last play
+        cell.isModified_ = true;
         return true;
     }
 
@@ -174,18 +210,30 @@ public:
         }
         cout << endl;
 
+
         for (int i = 0; i < numLins_; ++i) {
             cout << static_cast<char>('A' + i) << " ";
             for (int j = 0; j < numCols_; ++j) {
-                if (lastPlay_.first == i && lastPlay_.second == j) {
-                    cout << '*' << b_[i][j].symbol_ << " "; // Mark the newly placed letter
-                } else {
-                    cout << b_[i][j].symbol_ << " ";
+
+                const Cell& cell = b_[i][j];
+                if (cell.symbol_ != '.') {
+                    if (cell.isModified_) {
+                        cout << RED << WHITE_B << cell.symbol_ << " " << NO_COLOR;
+                    }
+                    else {
+                        cout << BLACK << WHITE_B << cell.symbol_ << " " << NO_COLOR;
+                    }
                 }
+                else {
+                    cout << WHITE_B << WHITE_B << ' ' << " " << NO_COLOR;
+                }
+
             }
+
             cout << endl;
         }
     }
+
 
 private:
     vector<vector<Cell>> b_;
@@ -196,7 +244,7 @@ private:
     void initializeBoard(int rows, int cols) {
         numLins_ = rows;
         numCols_ = cols;
-        b_ = vector<vector<Cell>>(rows, vector<Cell>(cols, {'.', '.', 0}));
+        b_ = vector<vector<Cell>>(rows, vector<Cell>(cols, { '.', '.', 0 }));
     }
 
     void parseBoardRow(const string& row, int rowIndex) {
@@ -223,7 +271,8 @@ private:
                     cell.symbol_ = word[i];
                 }
             }
-        } else if (orientation == 'V') {
+        }
+        else if (orientation == 'V') {
             for (size_t i = 0; i < word.length() && rowIndex + i < numLins_; ++i) {
                 Cell& cell = b_[rowIndex + i][colIndex];
                 // Only place the letter if the cell is empty or matches the word letter
@@ -294,10 +343,14 @@ int main() {
         players.emplace_back(i + 1, "");
     }
 
+    // Read the number of letters each player will start with
+    cout << "Number of players' letters ? ";
+    cin >> numPlayerLetters;
+
     readPlayersInfo(players);
     Board board("board.txt", players);
     Bag bag(board.getLetters());
-    distributeLettersToPlayers(players, bag, 7);  // Assuming each player gets 7 letters initially
+    distributeLettersToPlayers(players, bag, numPlayerLetters);
 
     bool gameOver = false;
 
@@ -306,36 +359,67 @@ int main() {
         for (auto& player : players) {
             cout << player.getName() << "'s turn. Hand: ";
             player.showHand();
-            cout << "Enter your move (row column letter), or 'pass' to skip: ";
-            string input;
-            cin >> input;
 
-            if (input == "pass") {
-                continue;
-            }
+            bool validMove = false;
 
-            // Check if the input is in the correct format (3 characters)
-            if (input.length() != 3 || !isalpha(input[0]) || !isalpha(input[1]) || !isalpha(input[2])) {
-                cout << "Invalid input format. Please enter row, column, and letter (e.g., AaB)." << endl;
-                continue;
-            }
+            while (!validMove) {
+                cout << "Enter your move (LcLetter), 'EXCHANGE' to change the letters, or 'PASS' to skip: ";
+                string input;
+                cin >> input;
 
-            char row = input[0];
-            char column = input[1];
-            char letter = input[2];
+                if (input == "PASS") {
+                    break;  // Pula para o próximo jogador
+                }
 
-            if (board.playAt(player.getId(), row, column, letter)) {
-                string newLetters = bag.remove(1); // Assign result to a variable
-                player.drawLetters(newLetters);
-                board.show();
+                if (input == "EXCHANGE") {
+                    Hand& playerHand = player.getHandReference(); // Reference to the player's hand
+                    string oldLetters = playerHand.getLetters();
 
-            } else{
-                cout << "Invalid move. Try again." << endl;
-                continue;
+                    // Remove old letters from player's hand
+                    for (char letter : oldLetters) {
+                        playerHand.remove(letter);
+                    }
+
+                    // Debugging: Check if hand is empty
+                    if (!playerHand.getLetters().empty()) {
+                        cerr << "Error: Hand not empty after removal." << endl;
+                    }
+
+                    string newLetters = bag.remove(numPlayerLetters);
+                    playerHand.insert(newLetters); // Insert new letters
+
+                    cout << player.getName() << "'s turn. Hand: ";
+                    player.showHand();
+                    continue;
+                }
+
+                if (input.length() == 3 && isalpha(input[0]) && isalpha(input[1]) && isalpha(input[2])) {
+                    char row = input[0];
+                    char column = input[1];
+                    char letter = input[2];
+
+                    if (board.playAt(player.getId(), row, column, letter)) {
+                        bool removed = player.getHand().remove(letter);
+                        if (!removed) {
+                            cerr << "Warning: Letter " << letter << " not found in hand." << endl;
+                        }
+                        cout << "You have chosen the letter: " << letter << endl;
+
+                        string newLetters = bag.remove(1);
+                        player.drawLetters(newLetters);
+                        board.show();
+                        validMove = true;
+                    }
+                    else {
+                        cout << "Invalid move. Try again." << endl;
+                    }
+                } else {
+                    cout << "Invalid input format. Please enter line, column, and letter (e.g., AaB)." << endl;
+                }
             }
         }
-    }
 
+    }
 
     cout << "Game over!" << endl;
     return 0;
