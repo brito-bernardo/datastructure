@@ -267,6 +267,37 @@ vector<int> FunWithCycles::factorize(int n)
 // TODO
 vector<int> FunWithCycles::listPrimes(int n) {
     vector<int> ans;
+    vector<bool> prime(n + 1, true);
+
+    prime[0] = prime[1] = false;
+
+    for(int p = 2; p * p <= n; ++p)
+    {
+        if (prime[p] == true)
+        {
+            for (int i = p * p;  i <= n ; i = i + p)
+            {
+                prime[i] = false;
+            }
+            
+            
+        }
+    }
+
+    for (int i = 2; i <= n; ++i) {
+        if (prime[i]) {
+            ans.push_back(i);
+        }
+    }
+
+
+    return ans;
+}
+
+
+/*
+ * vector<int> FunWithCycles::listPrimes(int n) {
+    vector<int> ans;
 
     for(int i = 2; i <= n; ++i)
     {
@@ -278,3 +309,5 @@ vector<int> FunWithCycles::listPrimes(int n) {
 
     return ans;
 }
+ */
+

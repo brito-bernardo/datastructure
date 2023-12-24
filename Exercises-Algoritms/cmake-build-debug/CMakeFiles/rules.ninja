@@ -118,7 +118,7 @@ rule CXX_STATIC_LIBRARY_LINKER__gtest_main_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S"/Users/bernardobrito/Downloads/aed2324_p01 (1)" -B"/Users/bernardobrito/Downloads/aed2324_p01 (1)/cmake-build-debug"
+  command = /Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake --regenerate-during-build -S/Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms -B/Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms/cmake-build-debug
   description = Re-running CMake...
   generator = 1
 

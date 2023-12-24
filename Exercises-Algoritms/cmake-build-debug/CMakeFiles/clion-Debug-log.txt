@@ -1,4 +1,4 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S "/Users/bernardobrito/Downloads/aed2324_p01 (1)" -B "/Users/bernardobrito/Downloads/aed2324_p01 (1)/cmake-build-debug"
+/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_MAKE_PROGRAM=/Applications/CLion.app/Contents/bin/ninja/mac/ninja -G Ninja -S /Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms -B /Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms/cmake-build-debug
 -- The C compiler identification is AppleClang 15.0.0.15000040
 -- The CXX compiler identification is AppleClang 15.0.0.15000040
 -- Detecting C compiler ABI info
@@ -15,6 +15,6 @@
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD
 -- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
 -- Found Threads: TRUE  
--- Configuring done (9.4s)
+-- Configuring done (2.0s)
 -- Generating done (0.0s)
--- Build files have been written to: /Users/bernardobrito/Downloads/aed2324_p01 (1)/cmake-build-debug
+-- Build files have been written to: /Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms/cmake-build-debug

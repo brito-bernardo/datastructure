@@ -1,4 +1,4 @@
-# Install script for directory: /Users/bernardobrito/Downloads/aed2324_p01 (1)/lib/googletest
+# Install script for directory: /Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms/lib/googletest
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("/Users/bernardobrito/Downloads/aed2324_p01 (1)/cmake-build-debug/lib/googletest/googlemock/cmake_install.cmake")
+  include("/Users/bernardobrito/Desktop/projetos-backend/datastructure/Exercises-Algoritms/cmake-build-debug/lib/googletest/googlemock/cmake_install.cmake")
 
 endif()
 
