@@ -245,6 +245,7 @@ vector<int> FunWithCycles::factorize(int n)
     for (int i = 2; i < n; ++i)
     {
         if (temp % i == 0)
+
         {
             temp = temp / i;
             ans.push_back(i);
@@ -269,8 +270,10 @@ vector<int> FunWithCycles::listPrimes(int n) {
     vector<int> ans;
     vector<bool> prime(n + 1, true);
 
-    prime[0] = prime[1] = false;
 
+    prime[0] = prime[1] = false;
+    // 4 /  8 / 16 / ...
+    //
     for(int p = 2; p * p <= n; ++p)
     {
         if (prime[p] == true)
